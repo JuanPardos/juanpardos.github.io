@@ -14,15 +14,15 @@ const formatoFecha = (fecha: Date) =>
   });
 ---
 
-<Layout title="Blog — Juan Pardos" description="Artículos, ideas y notas.">
+<Layout title="Blog — Juan Pardos">
   <main>
-    <a class="volver" href="/" data-i18n="nav.home">← Inicio</a>
-    <h1 data-i18n="blog.title">Blog</h1>
-    <p class="intro" data-i18n="blog.intro">Artículos, tutoriales y notas sobre lo que voy aprendiendo.</p>
+    <a class="volver" href="/" data-i18n="nav.home"/>
+    <h1 data-i18n="blog.title"/>
+    <p class="intro" data-i18n="blog.intro"/>
 
     {
       articulos.length === 0 ? (
-        <p class="vacio" data-i18n="blog.empty">Todavía no hay artículos publicados.</p>
+        <p class="vacio" data-i18n="blog.empty"/>
       ) : (
         <ul class="lista">
           {articulos.map((articulo) => (

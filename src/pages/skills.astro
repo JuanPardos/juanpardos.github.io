@@ -21,36 +21,32 @@ const colorNivel: Record<number, string> = {
 const categorias = [
   {
     clave: 'skills.cat.frontend',
-    nombre: 'Frontend',
     items: ['Java Server Faces', 'Angular', 'CSS'],
   },
   {
     clave: 'skills.cat.backend',
-    nombre: 'Backend',
     items: ['Spring Boot', 'Oracle SQL'],
   },
   {
     clave: 'skills.cat.tools',
-    nombre: 'Herramientas',
     items: ['Git', 'Docker', 'Pentaho Data Integration', 'SAP Powerdesigner'],
   },
   {
     clave: 'skills.cat.others',
-    nombre: 'Otros',
     items: ['Linux', 'Tauri'],
   },
 ];
 ---
 
-<Layout title="Skills — Juan Pardos" description="Tecnologías y herramientas con las que trabajo o estoy aprendiendo.">
+<Layout title="Skills — Juan Pardos">
   <main>
-    <a class="volver" href="/" data-i18n="nav.home">← Inicio</a>
-    <h1 data-i18n="skills.title">Skills</h1>
-    <p class="intro" data-i18n="skills.intro">Tecnologías y herramientas con las que trabajo o estoy aprendiendo.</p>
+    <a class="volver" href="/" data-i18n="nav.home"/>
+    <h1 data-i18n="skills.title"/>
+    <p class="intro" data-i18n="skills.intro"/>
 
     <div class="categorias">
       <section class="categoria">
-        <h2 data-i18n="skills.cat.languages">Lenguajes</h2>
+        <h2 data-i18n="skills.cat.languages"/>
         <ul class="lenguajes">
           {
             lenguajes.map((lenguaje) => (
@@ -84,7 +80,7 @@ const categorias = [
       {
         categorias.map((categoria) => (
           <section class="categoria">
-            <h2 data-i18n={categoria.clave}>{categoria.nombre}</h2>
+            <h2 data-i18n={categoria.clave}/>
             <ul class="tags">
               {categoria.items.map((item) => (
                 <li>{item}</li>

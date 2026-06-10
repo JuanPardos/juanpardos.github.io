@@ -4,11 +4,11 @@ import Layout from '../layouts/Layout.astro';
 const accessKey = '506d8a2c-015c-4363-8173-ae3ad9bcab99';
 ---
 
-<Layout title="Contact — Juan Pardos" description="Ponte en contacto conmigo.">
+<Layout title="Contact — Juan Pardos">
   <main>
-    <a class="volver" href="/" data-i18n="nav.home">← Inicio</a>
-    <h1 data-i18n="contact.title">Contact</h1>
-    <p class="intro" data-i18n="contact.intro">¿Quieres dejarme un comentario? Rellena el formulario.</p>
+    <a class="volver" href="/" data-i18n="nav.home"/>
+    <h1 data-i18n="contact.title"/>
+    <p class="intro" data-i18n="contact.intro"/>
 
     <form id="form-contacto" class="form" action="https://api.web3forms.com/submit" method="POST">
       <input type="hidden" name="access_key" value={accessKey} />
@@ -16,23 +16,23 @@ const accessKey = '506d8a2c-015c-4363-8173-ae3ad9bcab99';
       <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
 
       <label>
-        <span data-i18n="contact.name">Nombre</span>
-        <input type="text" name="name" placeholder="Tu nombre" data-i18n-ph="contact.name.ph" required autocomplete="name" />
+          <span data-i18n="contact.name"/>
+        <input type="text" name="name" data-i18n-ph="contact.name.ph" required autocomplete="name" />
       </label>
 
       <label>
-        <span data-i18n="contact.email">Email</span>
-        <input type="email" name="email" placeholder="tucorreo@ejemplo.com" data-i18n-ph="contact.email.ph" required autocomplete="email" />
+        <span data-i18n="contact.email"/>
+        <input type="email" name="email" data-i18n-ph="contact.email.ph" required autocomplete="email" />
       </label>
 
       <label>
-        <span data-i18n="contact.message">Mensaje</span>
-        <textarea name="message" rows="5" placeholder="Cómo puedo ayudarte…" data-i18n-ph="contact.message.ph" required></textarea>
+        <span data-i18n="contact.message"/>
+        <textarea name="message" rows="5" data-i18n-ph="contact.message.ph" required></textarea>
       </label>
 
       <div class="h-captcha" data-captcha="true"></div>
 
-      <button type="submit" data-i18n="contact.send">Enviar</button>
+      <button type="submit" data-i18n="contact.send"/>
       <p id="estado" class="estado" role="status" aria-live="polite"></p>
     </form>
 

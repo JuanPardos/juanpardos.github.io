@@ -21,12 +21,9 @@ const formatoFecha = (fecha: Date) =>
   });
 ---
 
-<Layout
-  title={`${articulo.data.titulo} — Juan Pardos`}
-  description={articulo.data.descripcion}
->
+<Layout title={`${articulo.data.titulo} — Juan Pardos`}>
   <main>
-    <a class="volver" href="/blog" data-i18n="nav.blog">← Blog</a>
+    <a class="volver" href="/blog" data-i18n="nav.blog"/>
     <article>
       <header>
         <time datetime={articulo.data.fecha.toISOString()} data-i18n-date>

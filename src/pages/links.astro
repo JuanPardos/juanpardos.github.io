@@ -16,38 +16,34 @@ const enlaces = [
     etiqueta: 'X (Twitter)',
     logo: 'x',
     clave: 'links.x.desc',
-    descripcion: 'Mis publicaciones y novedades.',
     url: 'https://x.com/pjzara',
   },
   {
     etiqueta: 'GitHub',
     logo: 'github',
     clave: 'links.github.desc',
-    descripcion: 'Mis repositorios y proyectos.',
     url: 'https://github.com/JuanPardos',
   },
   {
     etiqueta: 'AniList',
     logo: 'anilist',
     clave: 'links.anilist.desc',
-    descripcion: 'Lo que veo y leo.',
     url: 'https://anilist.co/user/MrPardios',
   },
   {
     etiqueta: 'Steam',
     logo: 'steam',
     clave: 'links.steam.desc',
-    descripcion: 'Mi perfil de videojuegos.',
     url: 'https://steamcommunity.com/id/MrPardios',
   },
 ];
 ---
 
-<Layout title="Links — Juan Pardos" description="Mis perfiles y enlaces de interés.">
+<Layout title="Links — Juan Pardos">
   <main>
-    <a class="volver" href="/" data-i18n="nav.home">← Inicio</a>
-    <h1 data-i18n="links.title">Links</h1>
-    <p class="intro" data-i18n="links.intro">Mis perfiles y enlaces de interés.</p>
+    <a class="volver" href="/" data-i18n="nav.home"/>
+    <h1 data-i18n="links.title"/>
+    <p class="intro" data-i18n="links.intro"/>
 
     <ul class="lista">
       {
@@ -65,7 +61,7 @@ const enlaces = [
                 </svg>
                 <div class="texto">
                   <h2>{enlace.etiqueta}</h2>
-                  <p data-i18n={enlace.clave}>{enlace.descripcion}</p>
+                  <p data-i18n={enlace.clave}/>
                 </div>
               </a>
             </li>
