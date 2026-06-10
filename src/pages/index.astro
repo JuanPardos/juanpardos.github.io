@@ -3,14 +3,13 @@ import Layout from '../layouts/Layout.astro';
 
 const nombre = 'Juan Pardos';
 const titular = 'Desarrollador de software';
-const intro =
-  'Bienvenido a mi página personal. Aquí iré recopilando mis proyectos, ideas y notas.';
+const intro = 'Bienvenido a mi página personal';
 
 const tarjetas = [
   {
     clave: 'blog',
     titulo: 'Blog',
-    descripcion: 'Artículos, ideas y notas sobre lo que voy aprendiendo.',
+    descripcion: 'Artículos, tutoriales y notas.',
     url: '/blog',
     icono: 'M4 4h16v16H4z M4 9h16 M9 13h7 M9 16h5',
   },
@@ -33,7 +32,7 @@ const tarjetas = [
     titulo: 'Contact',
     descripcion: '¿Quieres hablar? Ponte en contacto conmigo.',
     url: '/contact',
-    icono: 'M4 4h16v16H4z M4 6l8 6 8-6',
+    icono: 'M2 5h20v14H2z M2 7l10 6 10-6',
   },
 ];
 ---
@@ -43,7 +42,10 @@ const tarjetas = [
     <header class="hero">
       <h1>{nombre}</h1>
       <p class="titular" data-i18n="home.tagline">{titular}</p>
-      <p class="intro" data-i18n="home.intro">{intro}</p>
+      <p class="intro">
+          <span data-i18n="home.intro">{intro}</span>
+          <img src="/assets/sword.svg" alt="Sword" width="20" height="20"/>
+      </p>
     </header>
 
     <section class="tarjetas">
@@ -74,6 +76,11 @@ const tarjetas = [
     <footer>
       <p>© 2026 {nombre}. <span data-i18n="footer.made">Hecho con Astro. Con la ayuda de IA.</span></p>
     </footer>
+
+    <div class="meme">
+        <img src="/assets/under_construction.avif"/>
+    </div>
+
   </main>
 </Layout>
 
@@ -105,6 +112,9 @@ const tarjetas = [
   .intro {
     color: var(--muted);
     margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .grid {
@@ -150,9 +160,20 @@ const tarjetas = [
 
   footer {
     margin-top: 4rem;
-    padding-top: 2rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--border);
     color: var(--muted);
     font-size: 0.9rem;
+  }
+
+  .meme {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .meme img {
+    max-width: 100%;
+    height: auto;
   }
 </style>

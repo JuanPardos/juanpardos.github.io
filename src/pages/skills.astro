@@ -1,11 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+const devicon = (slug: string) => `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${slug}.svg`;
+
 const lenguajes = [
-  { nombre: 'Java', nivel: 4 },
-  { nombre: 'JavaScript/TypeScript', nivel: 2 },
-  { nombre: 'Rust', nivel: 2 },
-  { nombre: 'Python', nivel: 1 },
+  { nombre: 'Java', nivel: 4, icono: devicon('java/java-original') },
+  { nombre: 'Rust', nivel: 3, icono: devicon('rust/rust-original') },
+  { nombre: 'TypeScript', nivel: 2, icono: devicon('typescript/typescript-plain') },
+  { nombre: 'Python', nivel: 1, icono: devicon('python/python-original') },
 ];
 
 const colorNivel: Record<number, string> = {
@@ -40,11 +42,11 @@ const categorias = [
 ];
 ---
 
-<Layout title="Skills — Juan Pardos" description="Tecnologías y herramientas con las que trabajo.">
+<Layout title="Skills — Juan Pardos" description="Tecnologías y herramientas con las que trabajo o estoy aprendiendo.">
   <main>
     <a class="volver" href="/" data-i18n="nav.home">← Inicio</a>
     <h1 data-i18n="skills.title">Skills</h1>
-    <p class="intro" data-i18n="skills.intro">Tecnologías y herramientas con las que trabajo.</p>
+    <p class="intro" data-i18n="skills.intro">Tecnologías y herramientas con las que trabajo o estoy aprendiendo.</p>
 
     <div class="categorias">
       <section class="categoria">
@@ -53,7 +55,10 @@ const categorias = [
           {
             lenguajes.map((lenguaje) => (
               <li>
-                <span class="nombre">{lenguaje.nombre}</span>
+                <span class="nombre">
+                  <img class="lang-icon" src={lenguaje.icono} alt="" aria-hidden="true" />
+                  {lenguaje.nombre}
+                </span>
                 <span
                   class="nivel"
                   title={`${lenguaje.nivel}/5`}
@@ -152,7 +157,16 @@ const categorias = [
   }
 
   .nombre {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 0.95rem;
+  }
+
+  .lang-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
   }
 
   .nivel {

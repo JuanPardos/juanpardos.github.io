@@ -10,18 +10,19 @@ export const ui: Record<Lang, Dict> = {
     'nav.blog': '← Blog',
 
     'home.tagline': 'Desarrollador de software',
-    'home.intro': 'Bienvenido a mi página personal. Aquí iré recopilando mis proyectos, ideas y notas.',
+    'home.intro': 'Bienvenido a mi página personal',
+
     'card.blog.title': 'Blog',
-    'card.blog.desc': 'Artículos, ideas y notas sobre lo que voy aprendiendo.',
+    'card.blog.desc': 'Artículos, tutoriales y notas.',
     'card.skills.title': 'Habilidades',
-    'card.skills.desc': 'Tecnologías y herramientas con las que trabajo.',
+    'card.skills.desc': 'Tecnologías y herramientas con las que trabajo o estoy aprendiendo.',
     'card.links.title': 'Enlaces',
     'card.links.desc': 'Mis perfiles y enlaces de interés.',
     'card.contact.title': 'Contacto',
     'card.contact.desc': '¿Quieres hablar? Ponte en contacto conmigo.',
 
     'blog.title': 'Blog',
-    'blog.intro': 'Artículos, ideas y notas sobre lo que voy aprendiendo.',
+    'blog.intro': 'Artículos, tutoriales y notas que me parecen interesantes.',
     'blog.empty': 'Todavía no hay artículos publicados.',
 
     'skills.title': 'Habilidades',
@@ -46,7 +47,7 @@ export const ui: Record<Lang, Dict> = {
     'contact.email': 'Email',
     'contact.email.ph': 'tucorreo@ejemplo.com',
     'contact.message': 'Mensaje',
-    'contact.message.ph': 'Cuéntame en qué puedo ayudarte…',
+    'contact.message.ph': 'Cuéntame cómo puedo ayudarte…',
     'contact.send': 'Enviar',
     'contact.sending': 'Enviando…',
     'contact.ok': '¡Mensaje enviado! Gracias por escribir.',
@@ -54,25 +55,25 @@ export const ui: Record<Lang, Dict> = {
     'contact.neterror': 'Error de conexión. Inténtalo de nuevo.',
 
     'footer.lang': 'Idioma',
-    'footer.made': 'Hecho con Astro. Con la ayuda de la IA.',
+    'footer.made': 'Hecho con Astro. Con la ayuda de IA.',
   },
   en: {
     'nav.home': '← Home',
     'nav.blog': '← Blog',
 
     'home.tagline': 'Software developer',
-    'home.intro': 'Welcome to my personal page. Here I gather my projects, ideas and notes.',
+    'home.intro': 'Welcome to my personal page',
     'card.blog.title': 'Blog',
-    'card.blog.desc': 'Articles, ideas and notes about what I learn.',
+    'card.blog.desc': 'Articles, tutorials and notes.',
     'card.skills.title': 'Skills',
-    'card.skills.desc': 'Technologies and tools I work with.',
+    'card.skills.desc': 'Technologies and tools I work with or I am learning.',
     'card.links.title': 'Links',
     'card.links.desc': 'My profiles and useful links.',
     'card.contact.title': 'Contact',
     'card.contact.desc': 'Want to talk? Get in touch with me.',
 
     'blog.title': 'Blog',
-    'blog.intro': 'Articles, ideas and notes about what I learn. Not available in English yet.',
+    'blog.intro': 'Articles, ideas and notes about what I learn. Not available in English.',
     'blog.empty': 'No articles published yet.',
 
     'skills.title': 'Skills',
