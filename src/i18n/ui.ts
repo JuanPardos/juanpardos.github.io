@@ -18,13 +18,13 @@ export const ui: Record<Lang, Dict> = {
     'card.links.title': 'Enlaces',
     'card.links.desc': 'Mis perfiles y enlaces de interés.',
     'card.contact.title': 'Contacto',
-    'card.contact.desc': '¿Quieres dejarme un comentario? Rellena el formulario.',
+    'card.contact.desc': '¿Quieres hablar? Ponte en contacto conmigo.',
 
     'blog.title': 'Blog',
     'blog.intro': 'Artículos, ideas y notas sobre lo que voy aprendiendo.',
     'blog.empty': 'Todavía no hay artículos publicados.',
 
-    'skills.title': 'Skills',
+    'skills.title': 'Habilidades',
     'skills.intro': 'Tecnologías y herramientas con las que trabajo.',
     'skills.cat.languages': 'Lenguajes',
     'skills.cat.frontend': 'Frontend',
@@ -32,14 +32,14 @@ export const ui: Record<Lang, Dict> = {
     'skills.cat.tools': 'Herramientas',
     'skills.cat.others': 'Otros',
 
-    'links.title': 'Links',
+    'links.title': 'Enlaces',
     'links.intro': 'Mis perfiles y enlaces de interés.',
     'links.x.desc': 'Mis publicaciones y novedades.',
     'links.github.desc': 'Mis repositorios y proyectos.',
     'links.anilist.desc': 'Mi perfil de Anilist.',
     'links.steam.desc': 'Mi perfil de Steam.',
 
-    'contact.title': 'Contact',
+    'contact.title': 'Contacto',
     'contact.intro': '¿Quieres dejarme un comentario? Rellena el formulario.',
     'contact.name': 'Nombre',
     'contact.name.ph': 'Tu nombre',
