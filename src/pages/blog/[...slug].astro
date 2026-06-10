@@ -1,0 +1,136 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const articulos = await getCollection('blog', ({ data }) => !data.borrador);
+  return articulos.map((articulo) => ({
+    params: { slug: articulo.id },
+    props: { articulo },
+  }));
+}
+
+const { articulo } = Astro.props;
+const { Content } = await render(articulo);
+
+const formatoFecha = (fecha: Date) =>
+  fecha.toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+---
+
+<Layout
+  title={`${articulo.data.titulo} — Juan Pardos`}
+  description={articulo.data.descripcion}
+>
+  <main>
+    <a class="volver" href="/blog" data-i18n="nav.blog">← Blog</a>
+    <article>
+      <header>
+        <time datetime={articulo.data.fecha.toISOString()} data-i18n-date>
+          {formatoFecha(articulo.data.fecha)}
+        </time>
+        <h1>{articulo.data.titulo}</h1>
+      </header>
+      <div class="contenido">
+        <Content />
+      </div>
+    </article>
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    flex: 1;
+  }
+
+  .volver {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  time {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    letter-spacing: -0.02em;
+    margin-top: 0.4rem;
+    margin-bottom: 2.5rem;
+  }
+</style>
+
+<style is:global>
+  .contenido {
+    color: var(--text);
+  }
+
+  .contenido h2 {
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
+  }
+
+  .contenido h3 {
+    font-size: 1.2rem;
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  .contenido p,
+  .contenido ul,
+  .contenido ol {
+    margin-bottom: 1.25rem;
+  }
+
+  .contenido ul,
+  .contenido ol {
+    padding-left: 1.5rem;
+  }
+
+  .contenido li {
+    margin-bottom: 0.4rem;
+  }
+
+  .contenido a {
+    text-decoration: underline;
+  }
+
+  .contenido blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    color: var(--muted);
+    margin: 1.5rem 0;
+  }
+
+  .contenido :not(pre) > code {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.15em 0.4em;
+    font-size: 0.9em;
+  }
+
+  .contenido pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .contenido img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+</style>

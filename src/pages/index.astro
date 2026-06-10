@@ -1,0 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const nombre = 'Juan Pardos';
+const titular = 'Desarrollador de software';
+const intro =
+  'Bienvenido a mi página personal. Aquí iré recopilando mis proyectos, ideas y notas.';
+
+const tarjetas = [
+  {
+    clave: 'blog',
+    titulo: 'Blog',
+    descripcion: 'Artículos, ideas y notas sobre lo que voy aprendiendo.',
+    url: '/blog',
+    icono: 'M4 4h16v16H4z M4 9h16 M9 13h7 M9 16h5',
+  },
+  {
+    clave: 'skills',
+    titulo: 'Skills',
+    descripcion: 'Tecnologías y herramientas con las que trabajo.',
+    url: '/skills',
+    icono: 'M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z',
+  },
+  {
+    clave: 'links',
+    titulo: 'Links',
+    descripcion: 'Mis perfiles y enlaces de interés.',
+    url: '/links',
+    icono: 'M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1 M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1',
+  },
+  {
+    clave: 'contact',
+    titulo: 'Contact',
+    descripcion: '¿Quieres hablar? Ponte en contacto conmigo.',
+    url: '/contact',
+    icono: 'M4 4h16v16H4z M4 6l8 6 8-6',
+  },
+];
+---
+
+<Layout title={`${nombre}`}>
+  <main>
+    <header class="hero">
+      <h1>{nombre}</h1>
+      <p class="titular" data-i18n="home.tagline">{titular}</p>
+      <p class="intro" data-i18n="home.intro">{intro}</p>
+    </header>
+
+    <section class="tarjetas">
+      <div class="grid">
+        {
+          tarjetas.map((t) => (
+            <a class="card" href={t.url}>
+              <svg
+                class="card-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d={t.icono} />
+              </svg>
+              <h2 data-i18n={`card.${t.clave}.title`}>{t.titulo}</h2>
+              <p data-i18n={`card.${t.clave}.desc`}>{t.descripcion}</p>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 {nombre}. <span data-i18n="footer.made">Hecho con Astro. Con la ayuda de IA.</span></p>
+    </footer>
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    flex: 1;
+  }
+
+  .hero {
+    margin-bottom: 3rem;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .titular {
+    font-size: 1.25rem;
+    color: var(--accent);
+    margin-top: 0.5rem;
+  }
+
+  .intro {
+    color: var(--muted);
+    margin-top: 1.5rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .card {
+    display: block;
+    padding: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .card-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .card h2 {
+    color: var(--text);
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>

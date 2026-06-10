@@ -1,0 +1,153 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const logos: Record<string, string> = {
+  x: 'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.153h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z',
+  github:
+    'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12',
+  anilist:
+    'M6.361 2.943 0 21.056h4.942l1.077-3.133H11.4l1.052 3.133H22.9c.71 0 1.1-.392 1.1-1.101V17.53c0-.71-.39-1.101-1.1-1.101h-6.483V4.045c0-.71-.392-1.102-1.101-1.102h-2.422c-.71 0-1.101.392-1.101 1.102v1.064l-.758-2.166zm2.324 5.948 1.688 5.018H7.144z',
+  steam:
+    'M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z',
+};
+
+const enlaces = [
+  {
+    etiqueta: 'X (Twitter)',
+    logo: 'x',
+    clave: 'links.x.desc',
+    descripcion: 'Mis publicaciones y novedades.',
+    url: 'https://x.com/pjzara',
+  },
+  {
+    etiqueta: 'GitHub',
+    logo: 'github',
+    clave: 'links.github.desc',
+    descripcion: 'Mis repositorios y proyectos.',
+    url: 'https://github.com/JuanPardos',
+  },
+  {
+    etiqueta: 'AniList',
+    logo: 'anilist',
+    clave: 'links.anilist.desc',
+    descripcion: 'Lo que veo y leo.',
+    url: 'https://anilist.co/user/MrPardios',
+  },
+  {
+    etiqueta: 'Steam',
+    logo: 'steam',
+    clave: 'links.steam.desc',
+    descripcion: 'Mi perfil de videojuegos.',
+    url: 'https://steamcommunity.com/id/MrPardios',
+  },
+];
+---
+
+<Layout title="Links — Juan Pardos" description="Mis perfiles y enlaces de interés.">
+  <main>
+    <a class="volver" href="/" data-i18n="nav.home">← Inicio</a>
+    <h1 data-i18n="links.title">Links</h1>
+    <p class="intro" data-i18n="links.intro">Mis perfiles y enlaces de interés.</p>
+
+    <ul class="lista">
+      {
+        enlaces.map((enlace) => {
+          const externo = enlace.url.startsWith('http');
+          return (
+            <li>
+              <a
+                href={enlace.url}
+                target={externo ? '_blank' : undefined}
+                rel={externo ? 'noopener noreferrer' : undefined}
+              >
+                <svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d={logos[enlace.logo]} />
+                </svg>
+                <div class="texto">
+                  <h2>{enlace.etiqueta}</h2>
+                  <p data-i18n={enlace.clave}>{enlace.descripcion}</p>
+                </div>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    flex: 1;
+  }
+
+  .volver {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    letter-spacing: -0.02em;
+  }
+
+  .intro {
+    color: var(--muted);
+    margin-top: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .lista a {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+
+  .lista a:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .logo {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    color: var(--text);
+  }
+
+  .lista a:hover .logo {
+    color: var(--accent);
+  }
+
+  .texto h2 {
+    color: var(--text);
+    font-size: 1.15rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .texto p {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+</style>

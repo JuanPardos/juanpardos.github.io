@@ -1,0 +1,188 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const lenguajes = [
+  { nombre: 'Java', nivel: 4 },
+  { nombre: 'JavaScript/TypeScript', nivel: 2 },
+  { nombre: 'Rust', nivel: 2 },
+  { nombre: 'Python', nivel: 1 },
+];
+
+const colorNivel: Record<number, string> = {
+  1: '#f85149', // rojo
+  2: '#f0883e', // naranja
+  3: '#d29922', // amarillo
+  4: '#3fb950', // verde
+  5: '#2ea043', // verde intenso
+};
+
+const categorias = [
+  {
+    clave: 'skills.cat.frontend',
+    nombre: 'Frontend',
+    items: ['Java Server Faces', 'Angular', 'CSS'],
+  },
+  {
+    clave: 'skills.cat.backend',
+    nombre: 'Backend',
+    items: ['Spring Boot', 'Oracle SQL'],
+  },
+  {
+    clave: 'skills.cat.tools',
+    nombre: 'Herramientas',
+    items: ['Git', 'Docker', 'Pentaho Data Integration', 'SAP Powerdesigner'],
+  },
+  {
+    clave: 'skills.cat.others',
+    nombre: 'Otros',
+    items: ['Linux', 'Tauri'],
+  },
+];
+---
+
+<Layout title="Skills — Juan Pardos" description="Tecnologías y herramientas con las que trabajo.">
+  <main>
+    <a class="volver" href="/" data-i18n="nav.home">← Inicio</a>
+    <h1 data-i18n="skills.title">Skills</h1>
+    <p class="intro" data-i18n="skills.intro">Tecnologías y herramientas con las que trabajo.</p>
+
+    <div class="categorias">
+      <section class="categoria">
+        <h2 data-i18n="skills.cat.languages">Lenguajes</h2>
+        <ul class="lenguajes">
+          {
+            lenguajes.map((lenguaje) => (
+              <li>
+                <span class="nombre">{lenguaje.nombre}</span>
+                <span
+                  class="nivel"
+                  title={`${lenguaje.nivel}/5`}
+                  aria-label={`${lenguaje.nombre}: ${lenguaje.nivel} de 5`}
+                >
+                  {[1, 2, 3, 4, 5].map((barra) => (
+                    <i
+                      class:list={['barra', { activa: barra <= lenguaje.nivel }]}
+                      style={{
+                        height: `${barra * 20}%`,
+                        background:
+                          barra <= lenguaje.nivel ? colorNivel[lenguaje.nivel] : undefined,
+                      }}
+                    />
+                  ))}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {
+        categorias.map((categoria) => (
+          <section class="categoria">
+            <h2 data-i18n={categoria.clave}>{categoria.nombre}</h2>
+            <ul class="tags">
+              {categoria.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    flex: 1;
+  }
+
+  .volver {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    letter-spacing: -0.02em;
+  }
+
+  .intro {
+    color: var(--muted);
+    margin-top: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .categorias {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .categoria h2 {
+    font-size: 1.15rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  /* Lenguajes con barra de nivel */
+  .lenguajes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 360px;
+  }
+
+  .lenguajes li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .nombre {
+    font-size: 0.95rem;
+  }
+
+  .nivel {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .barra {
+    width: 5px;
+    border-radius: 2px;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+
+  /* Tags simples del resto de categorías */
+  .tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .tags li {
+    padding: 0.4rem 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.9rem;
+  }
+</style>

@@ -1,0 +1,200 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ?? '';
+---
+
+<Layout title="Contact — Juan Pardos" description="Ponte en contacto conmigo.">
+  <main>
+    <a class="volver" href="/" data-i18n="nav.home">← Inicio</a>
+    <h1 data-i18n="contact.title">Contact</h1>
+    <p class="intro" data-i18n="contact.intro">¿Quieres dejarme un comentario? Rellena el formulario.</p>
+
+    <form id="form-contacto" class="form" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value={accessKey} />
+      <input type="hidden" name="subject" value="Nuevo mensaje desde tu portal" />
+      <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
+
+      <label>
+        <span data-i18n="contact.name">Nombre</span>
+        <input type="text" name="name" placeholder="Tu nombre" data-i18n-ph="contact.name.ph" required autocomplete="name" />
+      </label>
+
+      <label>
+        <span data-i18n="contact.email">Email</span>
+        <input type="email" name="email" placeholder="tucorreo@ejemplo.com" data-i18n-ph="contact.email.ph" required autocomplete="email" />
+      </label>
+
+      <label>
+        <span data-i18n="contact.message">Mensaje</span>
+        <textarea name="message" rows="5" placeholder="Cuéntame en qué puedo ayudarte…" data-i18n-ph="contact.message.ph" required></textarea>
+      </label>
+
+      <div class="h-captcha" data-captcha="true"></div>
+
+      <button type="submit" data-i18n="contact.send">Enviar</button>
+      <p id="estado" class="estado" role="status" aria-live="polite"></p>
+    </form>
+
+  </main>
+</Layout>
+
+<script src="https://web3forms.com/client/script.js" async defer></script>
+
+<script>
+  import { t } from '../i18n/runtime';
+
+  const form = document.getElementById('form-contacto') as HTMLFormElement;
+  const estado = document.getElementById('estado') as HTMLParagraphElement;
+  const boton = form.querySelector('button') as HTMLButtonElement;
+
+  form.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+    estado.textContent = t('contact.sending');
+    estado.className = 'estado';
+    boton.disabled = true;
+
+    try {
+      const respuesta = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form),
+      });
+      const datos = await respuesta.json();
+
+      if (datos.success) {
+        estado.textContent = t('contact.ok');
+        estado.classList.add('ok');
+        form.reset();
+      } else {
+        estado.textContent = t('contact.fail');
+        estado.classList.add('error');
+      }
+    } catch {
+      estado.textContent = t('contact.neterror');
+      estado.classList.add('error');
+    } finally {
+      boton.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  main {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    flex: 1;
+  }
+
+  .volver {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    letter-spacing: -0.02em;
+  }
+
+  .intro {
+    color: var(--muted);
+    margin-top: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  label span {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  input[type='text'],
+  input[type='email'],
+  textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font: inherit;
+    resize: vertical;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--muted);
+    opacity: 0.7;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  button {
+    align-self: flex-start;
+    padding: 0.7rem 1.5rem;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .estado {
+    margin: 0;
+    font-size: 0.95rem;
+    min-height: 1.4em;
+  }
+
+  .estado.ok {
+    color: #3fb950;
+  }
+
+  .estado.error {
+    color: #f85149;
+  }
+
+  .alt {
+    margin-top: 1.5rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+</style>
