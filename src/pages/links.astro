@@ -99,22 +99,77 @@ type RepoFijado = {
 
 let reposFijados: RepoFijado[] = [];
 
-try {
-  const respuesta = await fetch('https://pinned.berrysauce.dev/get/JuanPardos');
+const GITHUB_USER = 'JuanPardos';
+const githubToken = import.meta.env.GITHUB_TOKEN;
 
-  if (respuesta.ok) {
-    const datos = await respuesta.json();
-    reposFijados = (datos ?? []).map((repo: any) => ({
-      nombre: repo.name,
-      descripcion: repo.description ?? '',
-      lenguaje: repo.language ?? '',
-      estrellas: String(repo.stars ?? 0),
-      forks: String(repo.forks ?? 0),
-      url: `https://github.com/${repo.author}/${repo.name}`,
-    }));
-  }
+// API oficial de GitHub (GraphQL): fiable y sin bloqueos de IP, requiere token.
+async function reposDesdeGitHub(token: string): Promise<RepoFijado[]> {
+  const respuesta = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
+        query ($usuario: String!) {
+          user(login: $usuario) {
+            pinnedItems(first: 6, types: REPOSITORY) {
+              nodes {
+                ... on Repository {
+                  name
+                  description
+                  url
+                  stargazerCount
+                  forkCount
+                  primaryLanguage { name }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: { usuario: GITHUB_USER },
+    }),
+  });
+
+  if (!respuesta.ok) throw new Error(`GitHub GraphQL ${respuesta.status}`);
+  const datos = await respuesta.json();
+  const nodos = datos?.data?.user?.pinnedItems?.nodes ?? [];
+  return nodos.map((repo: any) => ({
+    nombre: repo.name,
+    descripcion: repo.description ?? '',
+    lenguaje: repo.primaryLanguage?.name ?? '',
+    estrellas: String(repo.stargazerCount ?? 0),
+    forks: String(repo.forkCount ?? 0),
+    url: repo.url,
+  }));
+}
+
+// Respaldo sin token (para desarrollo local).
+async function reposDesdeBerrysauce(): Promise<RepoFijado[]> {
+  const respuesta = await fetch(`https://pinned.berrysauce.dev/get/${GITHUB_USER}`);
+  if (!respuesta.ok) throw new Error(`berrysauce ${respuesta.status}`);
+  const datos = await respuesta.json();
+  return (datos ?? []).map((repo: any) => ({
+    nombre: repo.name,
+    descripcion: repo.description ?? '',
+    lenguaje: repo.language ?? '',
+    estrellas: String(repo.stars ?? 0),
+    forks: String(repo.forks ?? 0),
+    url: `https://github.com/${repo.author}/${repo.name}`,
+  }));
+}
+
+try {
+  reposFijados = githubToken ? await reposDesdeGitHub(githubToken) : await reposDesdeBerrysauce();
 } catch (error) {
   console.error('Github error:', error);
+  try {
+    reposFijados = await reposDesdeBerrysauce();
+  } catch (errorRespaldo) {
+    console.error('Github respaldo error:', errorRespaldo);
+  }
 }
 ---
 
