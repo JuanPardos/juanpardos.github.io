@@ -37,7 +37,9 @@ export const ui: Record<Lang, Dict> = {
     'links.intro': 'Mis perfiles y enlaces de interés.',
     'links.x.desc': 'Mis publicaciones más autistas.',
     'links.github.desc': 'Mis proyectos abandonados.',
+    'links.github.pinned': 'Repositorios destacados',
     'links.anilist.desc': 'Mis queridas monas chinas.',
+    'links.anilist.watchingList': 'Viendo actualmente',
     'links.steam.desc': 'En ocasiones juego a cosas.',
 
     'contact.title': 'Contacto',
@@ -89,7 +91,9 @@ export const ui: Record<Lang, Dict> = {
     'links.intro': 'My profiles and useful links.',
     'links.x.desc': 'My most autistic posts.',
     'links.github.desc': 'My abandoned projects.',
+    'links.github.pinned': 'Pinned repositories',
     'links.anilist.desc': 'My beloved waifus.',
+    'links.anilist.watchingList': 'Watching list',
     'links.steam.desc': 'Sometimes I play games.',
 
     'contact.title': 'Contact',

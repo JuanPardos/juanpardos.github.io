@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
 
 const logos: Record<string, string> = {
   x: 'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.153h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z',
@@ -37,6 +38,84 @@ const enlaces = [
     url: 'https://steamcommunity.com/id/MrPardios',
   },
 ];
+
+type AnimeActual = {
+  titulo: string;
+  portada: string;
+  url: string;
+};
+
+let animesActuales: AnimeActual[] = [];
+
+try {
+  const respuesta = await fetch('https://graphql.anilist.co', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
+        query ($usuario: String) {
+          MediaListCollection(userName: $usuario, type: ANIME, status: CURRENT) {
+            lists {
+              entries {
+                media {
+                  title { romaji english }
+                  coverImage { large }
+                  siteUrl
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: { usuario: 'MrPardios' },
+    }),
+  });
+
+  if (respuesta.ok) {
+    const datos = await respuesta.json();
+    const entradas =
+      datos?.data?.MediaListCollection?.lists?.flatMap((lista: any) => lista.entries) ?? [];
+    animesActuales = entradas.map((entrada: any) => ({
+      titulo: entrada.media.title.english ?? entrada.media.title.romaji,
+      portada: entrada.media.coverImage.large,
+      url: entrada.media.siteUrl,
+    }));
+  }
+} catch (error) {
+  console.error('Anilist error:', error);
+}
+
+type RepoFijado = {
+  nombre: string;
+  descripcion: string;
+  lenguaje: string;
+  estrellas: string;
+  forks: string;
+  url: string;
+};
+
+let reposFijados: RepoFijado[] = [];
+
+try {
+  const respuesta = await fetch('https://pinned.berrysauce.dev/get/JuanPardos');
+
+  if (respuesta.ok) {
+    const datos = await respuesta.json();
+    reposFijados = (datos ?? []).map((repo: any) => ({
+      nombre: repo.name,
+      descripcion: repo.description ?? '',
+      lenguaje: repo.language ?? '',
+      estrellas: String(repo.stars ?? 0),
+      forks: String(repo.forks ?? 0),
+      url: `https://github.com/${repo.author}/${repo.name}`,
+    }));
+  }
+} catch (error) {
+  console.error('Github error:', error);
+}
 ---
 
 <Layout title="Links — Juan Pardos">
@@ -49,13 +128,15 @@ const enlaces = [
       {
         enlaces.map((enlace) => {
           const externo = enlace.url.startsWith('http');
+          const esAniList = enlace.etiqueta === 'AniList';
+          const esSteam = enlace.etiqueta === 'Steam';
+          const esGitHub = enlace.etiqueta === 'GitHub';
+          const mostrarAnimes = esAniList && animesActuales.length > 0;
+          const mostrarRepos = esGitHub && reposFijados.length > 0;
+
           return (
-            <li>
-              <a
-                href={enlace.url}
-                target={externo ? '_blank' : undefined}
-                rel={externo ? 'noopener noreferrer' : undefined}
-              >
+            <li class={mostrarAnimes || esSteam || mostrarRepos ? 'card' : undefined}>
+              <a href={enlace.url} target={externo ? '_blank' : undefined} rel={externo ? 'noopener noreferrer' : undefined}>
                 <svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d={logos[enlace.logo]} />
                 </svg>
@@ -64,6 +145,60 @@ const enlaces = [
                   <p data-i18n={enlace.clave}/>
                 </div>
               </a>
+
+              {mostrarAnimes && (
+                <details class="animes">
+                  <summary>
+                      <span data-i18n="links.anilist.watchingList"/>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <ul class="galeria">
+                    {animesActuales.map((anime) => (
+                      <li>
+                        <a href={anime.url} target="_blank" rel="noopener noreferrer" title={anime.titulo}>
+                          <Image src={anime.portada} alt={anime.titulo} width={230} height={275} loading="lazy" />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+
+              {mostrarRepos && (
+                <details class="animes">
+                  <summary>
+                    <span data-i18n="links.github.pinned"/>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <div class="repos">
+                    {reposFijados.map((repo) => (
+                      <a class="repo" href={repo.url} target="_blank" rel="noopener noreferrer">
+                        <h3>{repo.nombre}</h3>
+                        {repo.descripcion && <p>{repo.descripcion}</p>}
+                        <div class="repo-meta">
+                          {repo.lenguaje && <span>{repo.lenguaje}</span>}
+                          <span>★ {repo.estrellas}</span>
+                          <span>⑂ {repo.forks}</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </details>
+              )}
+
+              {esSteam && (
+                <div class="steam-perfil">
+                  <iframe
+                    src="https://gamer2810.github.io/steam-miniprofile/?accountId=130699687&interactive=true&vanityId=MrPardios"
+                    title="Steam miniprofile"
+                    loading="lazy"
+                  />
+                </div>
+              )}
             </li>
           );
         })
@@ -145,5 +280,159 @@ const enlaces = [
   .texto p {
     color: var(--muted);
     font-size: 0.95rem;
+  }
+
+  .lista li.card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+
+  .lista li.card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .lista li.card > a {
+    background: none;
+    border: none;
+    border-radius: 0;
+    transform: none;
+  }
+
+  .lista li.card > a:hover {
+    transform: none;
+  }
+
+  .animes {
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  .animes summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 0;
+    list-style: none;
+  }
+
+  .animes summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .animes .chevron {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--muted);
+    transition: transform 0.2s;
+  }
+
+  .animes[open] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .galeria {
+    margin-top: 1rem;
+  }
+
+  .galeria {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+  }
+
+  .galeria a {
+    display: block;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+  }
+
+  .galeria img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+
+  .galeria a:hover img {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .repos {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .repos .repo {
+    display: block;
+    padding: 1rem;
+    background: var(--bg, rgba(0, 0, 0, 0.15));
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+
+  .repos .repo:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .repos .repo h3 {
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .repos .repo p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .repos .repo-meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .steam-perfil {
+    padding: 0 1.5rem 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .steam-perfil iframe {
+    display: block;
+    width: 370px;
+    max-width: 100%;
+    height: 240px;
+    border: none;
+    border-radius: 8px;
   }
 </style>

@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import underConstruction from '../assets/under_construction.avif';
+import sword from '../assets/sword.svg';
 
 const nombre = 'Juan Pardos';
 
@@ -34,7 +37,7 @@ const tarjetas = [
       <p class="titular" data-i18n="home.tagline"/>
       <p class="intro">
           <span data-i18n="home.intro"/>
-          <img src="/assets/sword.svg" alt="Sword" width="20" height="20"/>
+          <Image src={sword} alt="Sword" width="20" height="20" loading="eager"/>
       </p>
     </header>
 
@@ -70,7 +73,7 @@ const tarjetas = [
     </footer>
 
     <div class="meme">
-        <img src="/assets/under_construction.avif"/>
+        <Image src={underConstruction} alt="Site under construction" loading="eager"/>
     </div>
 
   </main>
