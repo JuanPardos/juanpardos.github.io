@@ -61,6 +61,7 @@ try {
             lists {
               entries {
                 media {
+                  id
                   title { romaji english }
                   coverImage { large }
                   siteUrl
@@ -78,11 +79,18 @@ try {
     const datos = await respuesta.json();
     const entradas =
       datos?.data?.MediaListCollection?.lists?.flatMap((lista: any) => lista.entries) ?? [];
-    animesActuales = entradas.map((entrada: any) => ({
-      titulo: entrada.media.title.english ?? entrada.media.title.romaji,
-      portada: entrada.media.coverImage.large,
-      url: entrada.media.siteUrl,
-    }));
+    const vistos = new Set<number>();
+    animesActuales = entradas
+      .filter((entrada: any) => {
+        if (vistos.has(entrada.media.id)) return false;
+        vistos.add(entrada.media.id);
+        return true;
+      })
+      .map((entrada: any) => ({
+        titulo: entrada.media.title.english ?? entrada.media.title.romaji,
+        portada: entrada.media.coverImage.large,
+        url: entrada.media.siteUrl,
+      }));
   }
 } catch (error) {
   console.error('Anilist error:', error);
@@ -102,7 +110,6 @@ let reposFijados: RepoFijado[] = [];
 const GITHUB_USER = 'JuanPardos';
 const githubToken = import.meta.env.GITHUB_TOKEN;
 
-// API oficial de GitHub (GraphQL): fiable y sin bloqueos de IP, requiere token.
 async function reposDesdeGitHub(token: string): Promise<RepoFijado[]> {
   const respuesta = await fetch('https://api.github.com/graphql', {
     method: 'POST',
@@ -146,7 +153,6 @@ async function reposDesdeGitHub(token: string): Promise<RepoFijado[]> {
   }));
 }
 
-// Respaldo sin token (para desarrollo local).
 async function reposDesdeBerrysauce(): Promise<RepoFijado[]> {
   const respuesta = await fetch(`https://pinned.berrysauce.dev/get/${GITHUB_USER}`);
   if (!respuesta.ok) throw new Error(`berrysauce ${respuesta.status}`);
@@ -250,7 +256,7 @@ try {
                   <iframe
                     src="https://gamer2810.github.io/steam-miniprofile/?accountId=130699687&interactive=true&vanityId=MrPardios"
                     title="Steam miniprofile"
-                    loading="lazy"
+                    loading="eager"
                   />
                 </div>
               )}
