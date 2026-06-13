@@ -42,7 +42,7 @@ export const ui: Record<Lang, Dict> = {
     'links.anilist.watchingList': 'Viendo actualmente',
     'links.anilist.anime': 'Anime',
     'links.anilist.manga': 'Manga',
-    'links.anilist.planning': 'Planeando',
+    'links.anilist.planning': 'Pendiente',
     'links.anilist.completed': 'Completado',
     'links.anilist.episodesWatched': 'Episodios vistos',
     'links.anilist.meanScore': 'Puntuación media',
@@ -65,6 +65,7 @@ export const ui: Record<Lang, Dict> = {
 
     'footer.lang': 'Idioma',
     'footer.made': 'Hecho con Astro. Con la ayuda de IA.',
+    'footer.build': 'Fecha despliegue:',
   },
   en: {
     'nav.home': '← Home',
@@ -126,5 +127,6 @@ export const ui: Record<Lang, Dict> = {
 
     'footer.lang': 'Language',
     'footer.made': 'Made with Astro. With the aid of AI.',
+    'footer.build': 'Deploy date:',
   },
 };

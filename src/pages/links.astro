@@ -59,14 +59,13 @@ type Anime = {
 
 type Manga = {
   planning: string;
-  completed: string;
   chaptersRead: string;
   meanScore: string;
 }
 
 let datosAnilist: AnilistData = {
   anime: { planning: '0', completed: '0', episodesWatched: '0', meanScore: '0' },
-  manga: { planning: '0', completed: '0', chaptersRead: '0', meanScore: '0' },
+  manga: { planning: '0', chaptersRead: '0', meanScore: '0' },
 };
 
 try {
@@ -116,13 +115,12 @@ try {
     const meanScore = datos?.data?.User?.statistics?.anime?.meanScore ?? 0;
 
     const mangaPlanning = mangaStatuses.find((status: any) => status.status === 'PLANNING')?.count ?? 0;
-    const mangaCompleted = mangaStatuses.find((status: any) => status.status === 'COMPLETED')?.count ?? 0;
     const chaptersRead = datos?.data?.User?.statistics?.manga?.chaptersRead ?? 0;
     const mangaMeanScore = datos?.data?.User?.statistics?.manga?.meanScore ?? 0;
 
     datosAnilist = {
       anime: { planning: String(animePlanning), completed: String(animeCompleted), episodesWatched: String(episodesWatched), meanScore: String(meanScore) },
-      manga: { planning: String(mangaPlanning), completed: String(mangaCompleted), chaptersRead: String(chaptersRead), meanScore: String(mangaMeanScore) },
+      manga: { planning: String(mangaPlanning), chaptersRead: String(chaptersRead), meanScore: String(mangaMeanScore) },
     };
   }
 }catch(error){
@@ -305,9 +303,8 @@ try {
                   <div class="stat">
                     <span class="stat-titulo" data-i18n="links.anilist.manga"/>
                     <div class="stat-valores">
-                      <span class="chip"><strong>{datosAnilist.manga.completed}</strong> <span data-i18n="links.anilist.completed"/></span>
-                      <span class="chip"><strong>{datosAnilist.manga.planning}</strong> <span data-i18n="links.anilist.planning"/></span>
                       <span class="chip"><strong>{datosAnilist.manga.chaptersRead}</strong> <span data-i18n="links.anilist.chaptersRead"/></span>
+                      <span class="chip"><strong>{datosAnilist.manga.planning}</strong> <span data-i18n="links.anilist.planning"/></span>
                       <span class="chip"><strong>{datosAnilist.manga.meanScore}</strong> <span data-i18n="links.anilist.meanScore"/></span>
                     </div>
                   </div>
