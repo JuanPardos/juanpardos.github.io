@@ -45,6 +45,90 @@ type AnimeActual = {
   url: string;
 };
 
+type AnilistData = {
+  anime: Anime;
+  manga: Manga;
+}
+
+type Anime = {
+  planning: string;
+  completed: string;
+  episodesWatched: string;
+  meanScore: string;
+}
+
+type Manga = {
+  planning: string;
+  completed: string;
+  chaptersRead: string;
+  meanScore: string;
+}
+
+let datosAnilist: AnilistData = {
+  anime: { planning: '0', completed: '0', episodesWatched: '0', meanScore: '0' },
+  manga: { planning: '0', completed: '0', chaptersRead: '0', meanScore: '0' },
+};
+
+try {
+  const respuesta = await fetch('https://graphql.anilist.co', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
+        query ($name: String) {
+          User(name: $name) {
+            statistics {
+              anime {
+                statuses {
+                  status
+                  count
+                },
+                episodesWatched,
+                meanScore
+              }
+              manga {
+                statuses {
+                  status
+                  count
+                },
+                chaptersRead,
+                meanScore
+              }
+            }
+          }
+        }
+      `,
+        variables: { name: 'MrPardios' },
+      }),
+  });
+
+  if (respuesta.ok){
+    const datos = await respuesta.json();
+    const animeStatuses = datos?.data?.User?.statistics?.anime?.statuses ?? [];
+    const mangaStatuses = datos?.data?.User?.statistics?.manga?.statuses ?? [];
+
+    const animePlanning = animeStatuses.find((status: any) => status.status === 'PLANNING')?.count ?? 0;
+    const animeCompleted = animeStatuses.find((status: any) => status.status === 'COMPLETED')?.count ?? 0;
+    const episodesWatched = datos?.data?.User?.statistics?.anime?.episodesWatched ?? 0;
+    const meanScore = datos?.data?.User?.statistics?.anime?.meanScore ?? 0;
+
+    const mangaPlanning = mangaStatuses.find((status: any) => status.status === 'PLANNING')?.count ?? 0;
+    const mangaCompleted = mangaStatuses.find((status: any) => status.status === 'COMPLETED')?.count ?? 0;
+    const chaptersRead = datos?.data?.User?.statistics?.manga?.chaptersRead ?? 0;
+    const mangaMeanScore = datos?.data?.User?.statistics?.manga?.meanScore ?? 0;
+
+    datosAnilist = {
+      anime: { planning: String(animePlanning), completed: String(animeCompleted), episodesWatched: String(episodesWatched), meanScore: String(meanScore) },
+      manga: { planning: String(mangaPlanning), completed: String(mangaCompleted), chaptersRead: String(chaptersRead), meanScore: String(mangaMeanScore) },
+    };
+  }
+}catch(error){
+  console.error('Anilist error:', error);
+}
+
 let animesActuales: AnimeActual[] = [];
 
 try {
@@ -196,7 +280,7 @@ try {
           const mostrarRepos = esGitHub && reposFijados.length > 0;
 
           return (
-            <li class={mostrarAnimes || esSteam || mostrarRepos ? 'card' : undefined}>
+            <li class={esAniList || esSteam || mostrarRepos ? 'card' : undefined}>
               <a href={enlace.url} target={externo ? '_blank' : undefined} rel={externo ? 'noopener noreferrer' : undefined}>
                 <svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d={logos[enlace.logo]} />
@@ -207,10 +291,33 @@ try {
                 </div>
               </a>
 
+              {esAniList && (
+                <div class="anilist-stats">
+                  <div class="stat">
+                    <span class="stat-titulo" data-i18n="links.anilist.anime"/>
+                    <div class="stat-valores">
+                      <span class="chip"><strong>{datosAnilist.anime.completed}</strong> <span data-i18n="links.anilist.completed"/></span>
+                      <span class="chip"><strong>{datosAnilist.anime.planning}</strong> <span data-i18n="links.anilist.planning"/></span>
+                      <span class="chip"><strong>{datosAnilist.anime.episodesWatched}</strong> <span data-i18n="links.anilist.episodesWatched"/></span>
+                      <span class="chip"><strong>{datosAnilist.anime.meanScore}</strong> <span data-i18n="links.anilist.meanScore"/></span>
+                    </div>
+                  </div>
+                  <div class="stat">
+                    <span class="stat-titulo" data-i18n="links.anilist.manga"/>
+                    <div class="stat-valores">
+                      <span class="chip"><strong>{datosAnilist.manga.completed}</strong> <span data-i18n="links.anilist.completed"/></span>
+                      <span class="chip"><strong>{datosAnilist.manga.planning}</strong> <span data-i18n="links.anilist.planning"/></span>
+                      <span class="chip"><strong>{datosAnilist.manga.chaptersRead}</strong> <span data-i18n="links.anilist.chaptersRead"/></span>
+                      <span class="chip"><strong>{datosAnilist.manga.meanScore}</strong> <span data-i18n="links.anilist.meanScore"/></span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {mostrarAnimes && (
                 <details class="animes">
                   <summary>
-                      <span data-i18n="links.anilist.watchingList"/>
+                    <span data-i18n="links.anilist.watchingList"/>
                     <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                       <path d="M6 9l6 6 6-6" />
                     </svg>
@@ -368,6 +475,52 @@ try {
 
   .lista li.card > a:hover {
     transform: none;
+  }
+
+  .anilist-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    padding: 0 1.5rem 0.5rem;
+  }
+
+  .anilist-stats .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1rem;
+    background: var(--bg, rgba(0, 0, 0, 0.15));
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .anilist-stats .stat-titulo {
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .anilist-stats .stat-valores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .anilist-stats .chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .anilist-stats .chip strong {
+    color: var(--accent);
+    font-size: 0.95rem;
   }
 
   .animes {
