@@ -5,6 +5,7 @@ import underConstruction from '../assets/under_construction.avif';
 import sword from '../assets/sword.svg';
 
 const nombre = 'Juan Pardos';
+const buildDate = new Date();
 
 const tarjetas = [
   {
@@ -69,6 +70,10 @@ const tarjetas = [
     <footer>
       <p>©2026 {nombre}.
           <span data-i18n="footer.made"/>
+      </p>
+      <p class="build">
+          <span data-i18n="footer.build"/>
+          <time data-i18n-datetime datetime={buildDate.toISOString()}>{buildDate.toISOString()}</time>
       </p>
     </footer>
 
@@ -159,6 +164,17 @@ const tarjetas = [
     border-top: 1px solid var(--border);
     color: var(--muted);
     font-size: 0.9rem;
+  }
+
+  footer .build {
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    opacity: 0.8;
+  }
+
+  footer .build time {
+    display: inline-flex;
+    gap: 0.35ch;
   }
 
   .meme {

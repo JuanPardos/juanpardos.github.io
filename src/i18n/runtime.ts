@@ -36,6 +36,16 @@ export function applyLang(lang: Lang): void {
     }
   });
 
+  document.querySelectorAll<HTMLTimeElement>('time[data-i18n-datetime]').forEach((el) => {
+    const iso = el.getAttribute('datetime');
+    if (iso) {
+      el.textContent = new Date(iso).toLocaleString(
+        lang === 'en' ? 'en-US' : 'es-ES',
+        { dateStyle: 'long', timeStyle: 'short' },
+      );
+    }
+  });
+
   document.querySelectorAll<HTMLElement>('[data-lang-btn]').forEach((btn) => {
     btn.setAttribute('aria-pressed', String(btn.dataset.langBtn === lang));
   });
