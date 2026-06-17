@@ -1,14 +1,20 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
+import { langStaticPaths, asLang, useTranslations, localizedPath } from '../../i18n/utils';
+
+export const getStaticPaths = langStaticPaths;
+
+const lang = asLang(Astro.params.lang);
+const t = useTranslations(lang);
 
 const accessKey = '506d8a2c-015c-4363-8173-ae3ad9bcab99';
 ---
 
-<Layout title="Contact — Juan Pardos">
+<Layout title={`${t('contact.title')} — Juan Pardos`} lang={lang}>
   <main>
-    <a class="volver" href="/" data-i18n="nav.home"/>
-    <h1 data-i18n="contact.title"/>
-    <p class="intro" data-i18n="contact.intro"/>
+    <a class="volver" href={localizedPath('/', lang)}>{t('nav.home')}</a>
+    <h1>{t('contact.title')}</h1>
+    <p class="intro">{t('contact.intro')}</p>
 
     <form id="form-contacto" class="form" action="https://api.web3forms.com/submit" method="POST">
       <input type="hidden" name="access_key" value={accessKey} />
@@ -16,23 +22,23 @@ const accessKey = '506d8a2c-015c-4363-8173-ae3ad9bcab99';
       <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
 
       <label>
-          <span data-i18n="contact.name"/>
-        <input type="text" name="name" data-i18n-ph="contact.name.ph" required autocomplete="name" />
+        <span>{t('contact.name')}</span>
+        <input type="text" name="name" placeholder={t('contact.name.ph')} required autocomplete="name" />
       </label>
 
       <label>
-        <span data-i18n="contact.email"/>
-        <input type="email" name="email" data-i18n-ph="contact.email.ph" required autocomplete="email" />
+        <span>{t('contact.email')}</span>
+        <input type="email" name="email" placeholder={t('contact.email.ph')} required autocomplete="email" />
       </label>
 
       <label>
-        <span data-i18n="contact.message"/>
-        <textarea name="message" rows="5" data-i18n-ph="contact.message.ph" required></textarea>
+        <span>{t('contact.message')}</span>
+        <textarea name="message" rows="5" placeholder={t('contact.message.ph')} required></textarea>
       </label>
 
       <div class="h-captcha" data-captcha="true"></div>
 
-      <button type="submit" data-i18n="contact.send"/>
+      <button type="submit">{t('contact.send')}</button>
       <p id="estado" class="estado" role="status" aria-live="polite"></p>
     </form>
 
@@ -42,7 +48,11 @@ const accessKey = '506d8a2c-015c-4363-8173-ae3ad9bcab99';
 <script src="https://web3forms.com/client/script.js" async defer></script>
 
 <script>
-  import { t } from '../i18n/runtime';
+  import { ui, defaultLang, type Lang } from '../../i18n/ui';
+
+  const lang: Lang =
+    document.documentElement.lang === 'en' ? 'en' : defaultLang;
+  const t = (key: string) => ui[lang][key] ?? ui[defaultLang][key] ?? key;
 
   const form = document.getElementById('form-contacto') as HTMLFormElement;
   const estado = document.getElementById('estado') as HTMLParagraphElement;

@@ -1,5 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
+import { langStaticPaths, asLang, useTranslations, localizedPath } from '../../i18n/utils';
+
+export const getStaticPaths = langStaticPaths;
+
+const lang = asLang(Astro.params.lang);
+const t = useTranslations(lang);
 
 const devicon = (slug: string) => `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${slug}.svg`;
 
@@ -19,34 +25,22 @@ const colorNivel: Record<number, string> = {
 };
 
 const categorias = [
-  {
-    clave: 'skills.cat.frontend',
-    items: ['Java Server Faces', 'Angular', 'CSS'],
-  },
-  {
-    clave: 'skills.cat.backend',
-    items: ['Spring Boot', 'Oracle SQL'],
-  },
-  {
-    clave: 'skills.cat.tools',
-    items: ['Git', 'Pentaho Data Integration', 'SAP Powerdesigner', 'Docker'],
-  },
-  {
-    clave: 'skills.cat.others',
-    items: ['Linux', 'Tauri'],
-  },
+  { clave: 'skills.cat.frontend', items: ['Java Server Faces', 'Angular', 'CSS'] },
+  { clave: 'skills.cat.backend', items: ['Spring Boot', 'Oracle SQL'] },
+  { clave: 'skills.cat.tools', items: ['Git', 'Pentaho Data Integration', 'SAP Powerdesigner', 'Docker'] },
+  { clave: 'skills.cat.others', items: ['Linux', 'Tauri'] },
 ];
 ---
 
-<Layout title="Skills — Juan Pardos">
+<Layout title={`${t('skills.title')} — Juan Pardos`} lang={lang}>
   <main>
-    <a class="volver" href="/" data-i18n="nav.home"/>
-    <h1 data-i18n="skills.title"/>
-    <p class="intro" data-i18n="skills.intro"/>
+    <a class="volver" href={localizedPath('/', lang)}>{t('nav.home')}</a>
+    <h1>{t('skills.title')}</h1>
+    <p class="intro">{t('skills.intro')}</p>
 
     <div class="categorias">
       <section class="categoria">
-        <h2 data-i18n="skills.cat.languages"/>
+        <h2>{t('skills.cat.languages')}</h2>
         <ul class="lenguajes">
           {
             lenguajes.map((lenguaje) => (
@@ -58,7 +52,7 @@ const categorias = [
                 <span
                   class="nivel"
                   title={`${lenguaje.nivel}/5`}
-                  aria-label={`${lenguaje.nombre}: ${lenguaje.nivel} de 5`}
+                  aria-label={`${lenguaje.nombre}: ${lenguaje.nivel} / 5`}
                 >
                   {[1, 2, 3, 4, 5].map((barra) => (
                     <i
@@ -80,7 +74,7 @@ const categorias = [
       {
         categorias.map((categoria) => (
           <section class="categoria">
-            <h2 data-i18n={categoria.clave}/>
+            <h2>{t(categoria.clave)}</h2>
             <ul class="tags">
               {categoria.items.map((item) => (
                 <li>{item}</li>
