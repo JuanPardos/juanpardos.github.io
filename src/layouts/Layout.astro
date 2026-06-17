@@ -1,13 +1,19 @@
 ---
+import type { Lang } from '../i18n/ui';
+import { switchLangPath } from '../i18n/utils';
+
 interface Props {
-  title: string
+  title: string;
+  lang: Lang;
 }
 
-const { title } = Astro.props;
+const { title, lang } = Astro.props;
+const esHref = switchLangPath(Astro.url, 'es');
+const enHref = switchLangPath(Astro.url, 'en');
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,14 +24,14 @@ const { title } = Astro.props;
     <slot />
 
     <div class="lang-switcher" role="group" aria-label="Idioma / Language">
-      <button type="button" class="flag-btn" data-lang-btn="es" aria-pressed="true" title="Español">
+      <a class="flag-btn" href={esHref} hreflang="es" aria-pressed={lang === 'es'} title="Español">
         <svg class="flag" viewBox="0 0 3 2" preserveAspectRatio="none" aria-hidden="true">
           <rect width="3" height="2" fill="#c60b1e" />
           <rect width="3" height="1" y="0.5" fill="#ffc400" />
         </svg>
         <span>ES</span>
-      </button>
-      <button type="button" class="flag-btn" data-lang-btn="en" aria-pressed="false" title="English">
+      </a>
+      <a class="flag-btn" href={enHref} hreflang="en" aria-pressed={lang === 'en'} title="English">
         <svg class="flag" viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true">
           <clipPath id="uk-s"><path d="M0,0 v30 h60 v-30 z" /></clipPath>
           <clipPath id="uk-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z" /></clipPath>
@@ -38,24 +44,8 @@ const { title } = Astro.props;
           </g>
         </svg>
         <span>EN</span>
-      </button>
+      </a>
     </div>
-
-    <script>
-      import { applyLang, currentLang, STORAGE_KEY } from '../i18n/runtime';
-
-      applyLang(currentLang());
-
-      document.querySelectorAll<HTMLElement>('[data-lang-btn]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const lang = btn.dataset.langBtn;
-          if (lang === 'es' || lang === 'en') {
-            localStorage.setItem(STORAGE_KEY, lang);
-            applyLang(lang);
-          }
-        });
-      });
-    </script>
   </body>
 </html>
 
@@ -116,6 +106,7 @@ const { title } = Astro.props;
   }
 
   .flag-btn {
+    display: block;
     position: relative;
     width: 58px;
     height: 40px;

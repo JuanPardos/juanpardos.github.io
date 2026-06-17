@@ -5,4 +5,14 @@ export default defineConfig({
   image: {
     domains: ["s4.anilist.co"],
   },
+  i18n: {
+    locales: ["es", "en"],
+    defaultLocale: "es",
+    routing: {
+      prefixDefaultLocale: true,
+    },
+  },
+  redirects: {
+    "/": "/es",
+  },
 });

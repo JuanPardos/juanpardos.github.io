@@ -1,33 +1,31 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
+import { langs, asLang, useTranslations, localizedPath, formatDate } from '../../../i18n/utils';
 
 export async function getStaticPaths() {
   const articulos = await getCollection('blog', ({ data }) => !data.borrador);
-  return articulos.map((articulo) => ({
-    params: { slug: articulo.id },
-    props: { articulo },
-  }));
+  return langs.flatMap((lang) =>
+    articulos.map((articulo) => ({
+      params: { lang, slug: articulo.id },
+      props: { articulo },
+    })),
+  );
 }
 
 const { articulo } = Astro.props;
+const lang = asLang(Astro.params.lang);
+const t = useTranslations(lang);
 const { Content } = await render(articulo);
-
-const formatoFecha = (fecha: Date) =>
-  fecha.toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 ---
 
-<Layout title={`${articulo.data.titulo} — Juan Pardos`}>
+<Layout title={`${articulo.data.titulo} — Juan Pardos`} lang={lang}>
   <main>
-    <a class="volver" href="/blog" data-i18n="nav.blog"/>
+    <a class="volver" href={localizedPath('/blog', lang)}>{t('nav.blog')}</a>
     <article>
       <header>
-        <time datetime={articulo.data.fecha.toISOString()} data-i18n-date>
-          {formatoFecha(articulo.data.fecha)}
+        <time datetime={articulo.data.fecha.toISOString()}>
+          {formatDate(articulo.data.fecha, lang)}
         </time>
         <h1>{articulo.data.titulo}</h1>
       </header>

@@ -1,43 +1,33 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 import { Image } from 'astro:assets';
-import underConstruction from '../assets/under_construction.avif';
-import sword from '../assets/sword.svg';
+import underConstruction from '../../assets/under_construction.avif';
+import sword from '../../assets/sword.svg';
+import { langStaticPaths, asLang, useTranslations, localizedPath, formatDate } from '../../i18n/utils';
+
+export const getStaticPaths = langStaticPaths;
+
+const lang = asLang(Astro.params.lang);
+const t = useTranslations(lang);
 
 const nombre = 'Juan Pardos';
 const buildDate = new Date();
 
 const tarjetas = [
-  {
-    clave: 'blog',
-    url: '/blog',
-    icono: 'M4 4h16v16H4z M4 9h16 M9 13h7 M9 16h5',
-  },
-  {
-    clave: 'skills',
-    url: '/skills',
-    icono: 'M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z',
-  },
-  {
-    clave: 'links',
-    url: '/links',
-    icono: 'M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1 M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1',
-  },
-  {
-    clave: 'contact',
-    url: '/contact',
-    icono: 'M2 5h20v14H2z M2 7l10 6 10-6',
-  },
+  { clave: 'blog', url: localizedPath('/blog', lang), icono: 'M4 4h16v16H4z M4 9h16 M9 13h7 M9 16h5' },
+  { clave: 'skills', url: localizedPath('/skills', lang), icono: 'M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z' },
+  { clave: 'links', url: localizedPath('/links', lang), icono: 'M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1 M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1' },
+  { clave: 'contact', url: localizedPath('/contact', lang), icono: 'M2 5h20v14H2z M2 7l10 6 10-6' },
 ];
 ---
 
-<Layout title={`${nombre}`}>
+<Layout title={nombre} lang={lang}>
   <main>
     <header class="hero">
       <h1>{nombre}</h1>
-      <p class="titular" data-i18n="home.tagline"/>
+      <p class="titular">{t('home.tagline')}</p>
       <p class="intro">
-          <span data-i18n="home.intro"/>
+          <span>{t('home.intro')}</span>
           <Image src={sword} alt="Sword" width="20" height="20" loading="eager"/>
       </p>
     </header>
@@ -45,8 +35,8 @@ const tarjetas = [
     <section class="tarjetas">
       <div class="grid">
         {
-          tarjetas.map((t) => (
-            <a class="card" href={t.url}>
+          tarjetas.map((tarjeta) => (
+            <a class="card" href={tarjeta.url}>
               <svg
                 class="card-icon"
                 viewBox="0 0 24 24"
@@ -57,10 +47,10 @@ const tarjetas = [
                 stroke-linejoin="round"
                 aria-hidden="true"
               >
-                <path d={t.icono} />
+                <path d={tarjeta.icono} />
               </svg>
-              <h2 data-i18n={`card.${t.clave}.title`}/>
-              <p data-i18n={`card.${t.clave}.desc`}/>
+              <h2>{t(`card.${tarjeta.clave}.title`)}</h2>
+              <p>{t(`card.${tarjeta.clave}.desc`)}</p>
             </a>
           ))
         }
@@ -68,8 +58,10 @@ const tarjetas = [
     </section>
 
     <footer>
-      <p>©2026 {nombre}.
-          <span data-i18n="footer.made"/>
+      <p>©2026 {nombre}. {t('footer.made')}</p>
+      <p class="build">
+          {t('footer.build')}
+          <time datetime={buildDate.toISOString()}>{formatDate(buildDate, lang, true)}</time>
       </p>
       <p class="build">
           <span data-i18n="footer.build"/>
